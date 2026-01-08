@@ -5,10 +5,12 @@ export const SECONDS_IN_HOUR = 3600 as const;
 export const TIME_PAD_LENGTH = 2 as const;
 export const TIME_PAD_CHAR = '0' as const;
 export const TIME_SEPARATOR = ':' as const;
-export const INITIAL_TIME = 0 as const;
+export const INITIAL_TIME: number = 0;
 
 // Storage
 export const STORAGE_KEY_TRACKERS = 'trackers' as const;
+export const STORAGE_KEY_NOTES = 'notes' as const;
+export const STORAGE_KEY_CURRENT_TIME = 'currentTime' as const;
 
 // Icon sizes
 export const ICON_SIZE = {
@@ -28,7 +30,9 @@ export const LABELS = {
     RESET: 'Reset',
     DELETE: 'Delete',
     INPUT_PLACEHOLDER: 'Enter tracker name...',
-    EMPTY_LIST: 'No saved trackers yet. Add one above!'
+    EMPTY_LIST: 'No saved trackers yet. Add one above!',
+    ADD_NOTE: 'add note',
+    NOTE_PLACEHOLDER: 'Enter note...'
 } as const;
 
 // Keys

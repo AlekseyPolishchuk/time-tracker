@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { ICON_SIZE, INITIAL_TIME, LABELS, MILLISECONDS_IN_SECOND } from '../constants';
 import type { TimerProps } from '../types';
 import { formatTime } from '../utils/formatTime';
+import { DotMatrix } from './DotMatrix';
 import { PauseIcon, PlayIcon, ResetIcon } from './Icons';
 
 import styles from './Timer.module.css';
@@ -37,7 +38,9 @@ export function Timer({ time, setTime, isRunning, setIsRunning }: TimerProps) {
 
     return (
         <div className={styles.timer}>
-            <div className={styles.display}>{formatTime(time)}</div>
+            <div className={styles.display}>
+                <DotMatrix value={formatTime(time)} />
+            </div>
             <div className={styles.controls}>
                 <button className={`${styles.btn} ${styles.btnReset}`} onClick={handleReset} title={LABELS.RESET}>
                     <ResetIcon size={ICON_SIZE.LG} />

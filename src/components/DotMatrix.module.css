@@ -1,0 +1,36 @@
+.display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.character {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.colon {
+    margin: 0 2px;
+}
+
+.row {
+    display: flex;
+    gap: 2px;
+}
+
+.dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.dot.active {
+    background: var(--dot-color);
+    box-shadow:
+        0 0 2px var(--dot-color),
+        0 0 6px var(--dot-glow),
+        0 0 10px var(--dot-glow);
+}

@@ -5,6 +5,12 @@ export interface Tracker {
     createdAt: string;
 }
 
+export interface Note {
+    id: number;
+    content: string;
+    createdAt: string;
+}
+
 export interface TimerProps {
     time: number;
     setTime: React.Dispatch<React.SetStateAction<number>>;

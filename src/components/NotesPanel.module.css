@@ -1,0 +1,165 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.addBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-card);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.addBtn:hover {
+    border-color: var(--accent);
+    background: var(--bg-secondary);
+}
+
+.noteForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+    transition: all 0.2s;
+}
+
+.textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.formActions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.cancelBtn,
+.saveBtn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cancelBtn {
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-secondary);
+}
+
+.cancelBtn:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+}
+
+.saveBtn {
+    border: none;
+    background: var(--accent);
+    color: var(--bg-primary);
+}
+
+.saveBtn:hover:not(:disabled) {
+    background: var(--accent-hover);
+}
+
+.saveBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.notesList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.noteCard {
+    position: relative;
+    padding: 14px;
+    padding-top: 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.deleteBtn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.deleteBtn:hover {
+    color: var(--text-primary);
+    background: var(--bg-secondary);
+}
+
+.noteContent {
+    margin: 0;
+    padding-right: 16px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-note);
+    white-space: pre-wrap;
+    word-break: break-word;
+    cursor: text;
+}
+
+.editTextarea {
+    width: 100%;
+    padding: 0;
+    padding-right: 16px;
+    border: none;
+    background: transparent;
+    color: var(--text-note);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+}
+

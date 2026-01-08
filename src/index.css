@@ -1,32 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --bg-input: #0f172a;
-  --border-color: #334155;
-  --border-light: #475569;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #22d3ee;
-  --accent-hover: #05a8c4;
-  --accent-glow: rgba(34, 211, 238, 0.3);
-  --danger: #ef4444;
-  --danger-hover: #dc2626;
-  --success: #22c55e;
+    --bg-primary: #060818;
+    --bg-secondary: #0a0c1a;
+    --bg-card: #060713;
+    --bg-input: #060818;
+    --border-color: #24273f;
+    --border-light: #363a52;
+    --text-primary: #d9dcfb;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --text-note: #797ea8;
+    --accent: #22d3ee;
+    --accent-hover: #05a8c4;
+    --accent-glow: rgba(34, 211, 238, 0.3);
+    --danger: #ef4444;
+    --danger-hover: #dc2626;
+    --success: #22c55e;
+    --dot-color: #ffb432;
+    --dot-inactive: #151520;
+    --dot-glow: rgba(255, 180, 50, 0.6);
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background: var(--bg-primary);
-  min-height: 100vh;
-  color: var(--text-primary);
+    font-family:
+        'Inter',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    color: var(--text-primary);
 }
