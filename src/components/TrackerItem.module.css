@@ -19,10 +19,64 @@
     gap: 16px;
 }
 
+.nameWrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
 .name {
     font-weight: 500;
     font-size: 0.95rem;
     color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.name:hover {
+    color: var(--accent);
+}
+
+.editBtn {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: var(--transition);
+}
+
+.nameWrapper:hover .editBtn,
+.editBtn:focus {
+    opacity: 1;
+}
+
+.editBtn:hover {
+    color: var(--accent);
+}
+
+.nameInput {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    background: var(--bg-input);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    outline: none;
+    font-family: inherit;
+    min-width: 200px;
+    transition: var(--transition);
+}
+
+.nameInput:focus {
+    box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
 .time {

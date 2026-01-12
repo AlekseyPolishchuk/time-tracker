@@ -15,6 +15,7 @@ export const STORAGE_KEY_NAME = 'time-tracker-storage';
 
 // Icon sizes
 export const ICON_SIZE = {
+    XS: 14,
     SM: 16,
     MD: 18,
     LG: 20,
