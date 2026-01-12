@@ -109,9 +109,17 @@
     position: relative;
     padding: 14px;
     padding-top: 10px;
+    padding-left: 18px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
+    border-left: 4px solid var(--note-color);
     border-radius: var(--radius-lg);
+    transition: var(--transition);
+}
+
+.noteCard:hover {
+    border-left-width: 5px;
+    padding-left: 17px;
 }
 
 .deleteBtn {

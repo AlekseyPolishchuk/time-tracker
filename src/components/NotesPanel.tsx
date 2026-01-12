@@ -7,6 +7,23 @@ import { CloseIcon, PlusIcon } from './Icons';
 
 import styles from './NotesPanel.module.css';
 
+const NOTE_COLORS = [
+    '#4F46E5', // indigo
+    '#7C3AED', // violet
+    '#DB2777', // pink
+    '#DC2626', // red
+    '#EA580C', // orange
+    '#CA8A04', // yellow
+    '#16A34A', // green
+    '#0891B2', // cyan
+    '#0284C7', // blue
+    '#6366F1', // indigo-light
+];
+
+function getColorForNote(id: number): string {
+    return NOTE_COLORS[id % NOTE_COLORS.length];
+}
+
 export function NotesPanel() {
     const notes = useStore((state) => state.notes);
     const addNote = useStore((state) => state.addNote);
@@ -114,7 +131,11 @@ export function NotesPanel() {
 
             <div className={styles.notesList}>
                 {notes.map(note => (
-                    <div key={note.id} className={styles.noteCard}>
+                    <div
+                        key={note.id}
+                        className={styles.noteCard}
+                        style={{ '--note-color': getColorForNote(note.id) } as React.CSSProperties}
+                    >
                         <button className={styles.deleteBtn} onClick={() => deleteNote(note.id)}>
                             <CloseIcon size={ICON_SIZE.SM} />
                         </button>
