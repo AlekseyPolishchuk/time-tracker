@@ -1,26 +1,25 @@
+import { ICON_SIZE } from '../constants';
 import type { IconProps } from '../types';
 
-const DEFAULT_ICON_SIZE = 24;
-
-export const PlayIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const PlayIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg width={size} height={size} viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
         <path d='M6 4.75c0-1.14 1.28-1.82 2.22-1.17l12 7.25c.86.52.86 1.82 0 2.34l-12 7.25C7.28 21.07 6 20.39 6 19.25V4.75z' />
     </svg>
 );
 
-export const PauseIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const PauseIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg width={size} height={size} viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
         <path d='M6 4h4v16H6V4zm8 0h4v16h-4V4z' />
     </svg>
 );
 
-export const StopIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const StopIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg width={size} height={size} viewBox='0 0 24 24' fill='currentColor' xmlns='http://www.w3.org/2000/svg'>
         <rect x='6' y='6' width='12' height='12' rx='1' />
     </svg>
 );
 
-export const ResetIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const ResetIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}
@@ -36,7 +35,7 @@ export const ResetIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
     </svg>
 );
 
-export const DeleteIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const DeleteIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}
@@ -55,7 +54,7 @@ export const DeleteIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
     </svg>
 );
 
-export const SaveIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const SaveIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}
@@ -72,7 +71,7 @@ export const SaveIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
     </svg>
 );
 
-export const ClockIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const ClockIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}
@@ -88,7 +87,7 @@ export const ClockIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
     </svg>
 );
 
-export const PlusIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const PlusIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}
@@ -104,7 +103,7 @@ export const PlusIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
     </svg>
 );
 
-export const CloseIcon = ({ size = DEFAULT_ICON_SIZE }: IconProps) => (
+export const CloseIcon = ({ size = ICON_SIZE.DEFAULT }: IconProps) => (
     <svg
         width={size}
         height={size}

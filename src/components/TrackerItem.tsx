@@ -1,20 +1,27 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { ICON_SIZE, INITIAL_TIME, LABELS, MILLISECONDS_IN_SECOND } from '../constants';
-import type { TrackerItemProps } from '../types';
+import { useStore } from '../store/useStore';
+import type { Tracker } from '../types';
 import { formatTime } from '../utils/formatTime';
 import { DeleteIcon, PauseIcon, PlayIcon, ResetIcon } from './Icons';
 
 import styles from './TrackerItem.module.css';
 
-export function TrackerItem({ tracker, onUpdate, onDelete }: TrackerItemProps) {
+interface TrackerItemProps {
+    tracker: Tracker;
+}
+
+export function TrackerItem({ tracker }: TrackerItemProps) {
+    const updateTracker = useStore((state) => state.updateTracker);
+    const deleteTracker = useStore((state) => state.deleteTracker);
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
         if (isRunning) {
             intervalRef.current = setInterval(() => {
-                onUpdate(tracker.id, { time: tracker.time + 1 });
+                updateTracker(tracker.id, { time: tracker.time + 1 });
             }, MILLISECONDS_IN_SECOND);
         } else if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -25,7 +32,7 @@ export function TrackerItem({ tracker, onUpdate, onDelete }: TrackerItemProps) {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [isRunning, tracker.id, tracker.time, onUpdate]);
+    }, [isRunning, tracker.id, tracker.time, updateTracker]);
 
     const handlePlayPause = () => {
         setIsRunning(!isRunning);
@@ -33,7 +40,7 @@ export function TrackerItem({ tracker, onUpdate, onDelete }: TrackerItemProps) {
 
     const handleReset = () => {
         setIsRunning(false);
-        onUpdate(tracker.id, { time: INITIAL_TIME });
+        updateTracker(tracker.id, { time: INITIAL_TIME });
     };
 
     return (
@@ -54,7 +61,7 @@ export function TrackerItem({ tracker, onUpdate, onDelete }: TrackerItemProps) {
                 </button>
                 <button
                     className={`${styles.btn} ${styles.btnDelete}`}
-                    onClick={() => onDelete(tracker.id)}
+                    onClick={() => deleteTracker(tracker.id)}
                     title={LABELS.DELETE}>
                     <DeleteIcon size={ICON_SIZE.SM} />
                 </button>

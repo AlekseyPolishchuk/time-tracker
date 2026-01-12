@@ -1,6 +1,6 @@
 import { SECONDS_IN_HOUR, SECONDS_IN_MINUTE, TIME_PAD_CHAR, TIME_PAD_LENGTH, TIME_SEPARATOR } from '../constants';
 
-export function formatTime(totalSeconds) {
+export function formatTime(totalSeconds: number): string {
     const hours = Math.floor(totalSeconds / SECONDS_IN_HOUR);
     const minutes = Math.floor((totalSeconds % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE);
     const seconds = totalSeconds % SECONDS_IN_MINUTE;

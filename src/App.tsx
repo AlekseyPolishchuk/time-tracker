@@ -1,59 +1,36 @@
-import { type ChangeEvent, type KeyboardEvent, useCallback, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useState } from 'react';
 
-import { ClockIcon, SaveIcon } from './components/Icons';
+import { ClockIcon, DeleteIcon, SaveIcon } from './components/Icons';
+import { ConfirmDialog } from './components/ConfirmDialog';
 import { NotesPanel } from './components/NotesPanel';
 import { Timer } from './components/Timer';
 import { TrackerList } from './components/TrackerList';
-import {
-    ICON_SIZE,
-    INITIAL_TIME,
-    KEYBOARD_KEYS,
-    LABELS,
-    STORAGE_KEY_CURRENT_TIME,
-    STORAGE_KEY_NOTES,
-    STORAGE_KEY_TRACKERS
-} from './constants';
-import { useLocalStorage } from './hooks/useLocalStorage';
-import type { Note, Tracker } from './types';
+import { WeeklyStats } from './components/WeeklyStats';
+import { ICON_SIZE, KEYBOARD_KEYS, LABELS } from './constants';
+import { useStore } from './store/useStore';
 
 import styles from './App.module.css';
 
 function App() {
-    const [trackers, setTrackers] = useLocalStorage<Tracker[]>(STORAGE_KEY_TRACKERS, []);
-    const [notes, setNotes] = useLocalStorage<Note[]>(STORAGE_KEY_NOTES, []);
-    const [currentTime, setCurrentTime] = useLocalStorage(STORAGE_KEY_CURRENT_TIME, INITIAL_TIME);
-    const [isRunning, setIsRunning] = useState(false);
+    const trackers = useStore((state) => state.trackers);
+    const currentTime = useStore((state) => state.currentTime);
+    const isRunning = useStore((state) => state.isRunning);
+
+    const addTracker = useStore((state) => state.addTracker);
+    const clearAllTrackers = useStore((state) => state.clearAllTrackers);
+
+    const setCurrentTime = useStore((state) => state.setCurrentTime);
+    const setIsRunning = useStore((state) => state.setIsRunning);
+
+    // Local UI state
     const [trackerName, setTrackerName] = useState('');
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     const handleSaveTracker = () => {
         if (!trackerName.trim()) return;
-
-        const newTracker: Tracker = {
-            id: Date.now(),
-            name: trackerName.trim(),
-            time: currentTime,
-            createdAt: new Date().toISOString()
-        };
-
-        setTrackers(prev => [newTracker, ...prev]);
+        addTracker(trackerName.trim());
         setTrackerName('');
-        setCurrentTime(INITIAL_TIME);
-        setIsRunning(false);
     };
-
-    const handleUpdateTracker = useCallback(
-        (id: number, updates: Partial<Tracker>) => {
-            setTrackers(prev => prev.map(tracker => (tracker.id === id ? { ...tracker, ...updates } : tracker)));
-        },
-        [setTrackers]
-    );
-
-    const handleDeleteTracker = useCallback(
-        (id: number) => {
-            setTrackers(prev => prev.filter(tracker => tracker.id !== id));
-        },
-        [setTrackers]
-    );
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === KEYBOARD_KEYS.ENTER) {
@@ -65,31 +42,18 @@ function App() {
         setTrackerName(e.target.value);
     };
 
-    const handleAddNote = useCallback(
-        (content: string) => {
-            const newNote: Note = {
-                id: Date.now(),
-                content,
-                createdAt: new Date().toISOString()
-            };
-            setNotes(prev => [newNote, ...prev]);
-        },
-        [setNotes]
-    );
+    const handleClearAll = () => {
+        setShowConfirmDialog(true);
+    };
 
-    const handleUpdateNote = useCallback(
-        (id: number, content: string) => {
-            setNotes(prev => prev.map(note => (note.id === id ? { ...note, content } : note)));
-        },
-        [setNotes]
-    );
+    const handleConfirmClear = () => {
+        clearAllTrackers();
+        setShowConfirmDialog(false);
+    };
 
-    const handleDeleteNote = useCallback(
-        (id: number) => {
-            setNotes(prev => prev.filter(note => note.id !== id));
-        },
-        [setNotes]
-    );
+    const handleCancelClear = () => {
+        setShowConfirmDialog(false);
+    };
 
     return (
         <div className={styles.app}>
@@ -101,7 +65,9 @@ function App() {
             </header>
 
             <div className={styles.container}>
-                <div className={styles.leftColumn}>{/* Statistics will be added here */}</div>
+                <div className={styles.leftColumn}>
+                    <WeeklyStats trackers={trackers} />
+                </div>
 
                 <main className={styles.centerColumn}>
                     <section className={styles.currentTracker}>
@@ -123,21 +89,39 @@ function App() {
                             />
                             <button className={styles.btnSave} onClick={handleSaveTracker} disabled={!trackerName.trim()}>
                                 <SaveIcon size={ICON_SIZE.MD} />
-                                {LABELS.SAVE}
+                                {LABELS.SAVE_BTN}
                             </button>
                         </div>
                     </section>
 
                     <section className={styles.savedTrackers}>
-                        <h2 className={styles.sectionTitle}>{LABELS.SAVED_TRACKERS}</h2>
-                        <TrackerList trackers={trackers} onUpdate={handleUpdateTracker} onDelete={handleDeleteTracker} />
+                        <div className={styles.savedTrackersHeader}>
+                            <h2 className={styles.sectionTitle}>{LABELS.SAVED_TRACKERS}</h2>
+                            {trackers.length > 0 && (
+                                <button className={styles.btnClearAll} onClick={handleClearAll} title={LABELS.CLEAR_ALL}>
+                                    <DeleteIcon size={ICON_SIZE.SM} />
+                                    {LABELS.CLEAR_ALL}
+                                </button>
+                            )}
+                        </div>
+                        <TrackerList trackers={trackers} />
                     </section>
                 </main>
 
                 <div className={styles.rightColumn}>
-                    <NotesPanel notes={notes} onAdd={handleAddNote} onUpdate={handleUpdateNote} onDelete={handleDeleteNote} />
+                    <NotesPanel />
                 </div>
             </div>
+
+            <ConfirmDialog
+                isOpen={showConfirmDialog}
+                title={LABELS.CONFIRM_CLEAR_TITLE}
+                message={LABELS.CONFIRM_CLEAR_MESSAGE}
+                confirmLabel={LABELS.CLEAR_ALL}
+                cancelLabel={LABELS.CANCEL_BTN}
+                onConfirm={handleConfirmClear}
+                onCancel={handleCancelClear}
+            />
         </div>
     );
 }

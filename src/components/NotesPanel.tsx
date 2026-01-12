@@ -1,19 +1,17 @@
 import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { ICON_SIZE, KEYBOARD_KEYS, LABELS } from '../constants';
+import { useStore } from '../store/useStore';
 import type { Note } from '../types';
 import { CloseIcon, PlusIcon } from './Icons';
 
 import styles from './NotesPanel.module.css';
 
-interface NotesPanelProps {
-    notes: Note[];
-    onAdd: (content: string) => void;
-    onUpdate: (id: number, content: string) => void;
-    onDelete: (id: number) => void;
-}
-
-export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps) {
+export function NotesPanel() {
+    const notes = useStore((state) => state.notes);
+    const addNote = useStore((state) => state.addNote);
+    const updateNote = useStore((state) => state.updateNote);
+    const deleteNote = useStore((state) => state.deleteNote);
     const [isAdding, setIsAdding] = useState(false);
     const [newNote, setNewNote] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -29,7 +27,7 @@ export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps
 
     const handleAdd = () => {
         if (newNote.trim()) {
-            onAdd(newNote.trim());
+            addNote(newNote.trim());
             setNewNote('');
             setIsAdding(false);
         }
@@ -40,7 +38,7 @@ export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps
             e.preventDefault();
             handleAdd();
         }
-        if (e.key === 'Escape') {
+        if (e.key === KEYBOARD_KEYS.ESCAPE) {
             handleCancel();
         }
     };
@@ -68,14 +66,14 @@ export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps
             e.preventDefault();
             saveEdit();
         }
-        if (e.key === 'Escape') {
+        if (e.key === KEYBOARD_KEYS.ESCAPE) {
             cancelEdit();
         }
     };
 
     const saveEdit = () => {
         if (editingId !== null && editContent.trim()) {
-            onUpdate(editingId, editContent.trim());
+            updateNote(editingId, editContent.trim());
         }
         setEditingId(null);
         setEditContent('');
@@ -105,10 +103,10 @@ export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps
                     />
                     <div className={styles.formActions}>
                         <button className={styles.cancelBtn} onClick={handleCancel}>
-                            Cancel
+                            {LABELS.CANCEL_BTN}
                         </button>
                         <button className={styles.saveBtn} onClick={handleAdd} disabled={!newNote.trim()}>
-                            Save
+                            {LABELS.SAVE_BTN}
                         </button>
                     </div>
                 </div>
@@ -117,7 +115,7 @@ export function NotesPanel({ notes, onAdd, onUpdate, onDelete }: NotesPanelProps
             <div className={styles.notesList}>
                 {notes.map(note => (
                     <div key={note.id} className={styles.noteCard}>
-                        <button className={styles.deleteBtn} onClick={() => onDelete(note.id)}>
+                        <button className={styles.deleteBtn} onClick={() => deleteNote(note.id)}>
                             <CloseIcon size={ICON_SIZE.SM} />
                         </button>
                         {editingId === note.id ? (

@@ -1,10 +1,14 @@
 import { LABELS } from '../constants';
-import type { TrackerListProps } from '../types';
+import type { Tracker } from '../types';
 import { TrackerItem } from './TrackerItem';
 
 import styles from './TrackerList.module.css';
 
-export function TrackerList({ trackers, onUpdate, onDelete }: TrackerListProps) {
+interface TrackerListProps {
+    trackers: Tracker[];
+}
+
+export function TrackerList({ trackers }: TrackerListProps) {
     if (trackers.length === 0) {
         return <div className={styles.empty}>{LABELS.EMPTY_LIST}</div>;
     }
@@ -12,7 +16,7 @@ export function TrackerList({ trackers, onUpdate, onDelete }: TrackerListProps) 
     return (
         <div className={styles.list}>
             {trackers.map(tracker => (
-                <TrackerItem key={tracker.id} tracker={tracker} onUpdate={onUpdate} onDelete={onDelete} />
+                <TrackerItem key={tracker.id} tracker={tracker} />
             ))}
         </div>
     );

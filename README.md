@@ -15,9 +15,11 @@ A minimalist time tracking application built with React and TypeScript.
 
 ## Tech Stack
 
-- **React 18** - UI framework
+- **React 19** - UI framework
 - **TypeScript** - Type safety
 - **Vite** - Build tool
+- **Zustand** - State management
+- **Vitest** - Testing framework
 - **CSS Modules** - Scoped styling
 
 ## Installation
@@ -37,6 +39,24 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Testing
+
+```bash
+# Run tests once
+npm test -- --run
+
+# Watch mode
+npm test
+
+# UI mode
+npm run test:ui
+
+# Coverage
+npm run test:coverage
+```
+
+See [tests/README.md](tests/README.md) for more details.
 
 ## Deploy to GitHub Pages
 

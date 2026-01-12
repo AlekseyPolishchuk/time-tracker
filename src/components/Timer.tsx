@@ -14,7 +14,7 @@ export function Timer({ time, setTime, isRunning, setIsRunning }: TimerProps) {
     useEffect(() => {
         if (isRunning) {
             intervalRef.current = setInterval(() => {
-                setTime(prev => prev + 1);
+                setTime(time + 1);
             }, MILLISECONDS_IN_SECOND);
         } else if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -25,7 +25,7 @@ export function Timer({ time, setTime, isRunning, setIsRunning }: TimerProps) {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [isRunning, setTime]);
+    }, [isRunning, time, setTime]);
 
     const handlePlayPause = () => {
         setIsRunning(!isRunning);
