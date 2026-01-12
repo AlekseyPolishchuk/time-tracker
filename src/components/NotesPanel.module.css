@@ -205,8 +205,8 @@
 }
 
 .noteCard:hover {
-    border-left-width: 5px;
-    padding-left: 17px;
+    border-color: var(--border-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .deleteBtn {
