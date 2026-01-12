@@ -11,7 +11,7 @@
         radial-gradient(circle at center, var(--dot-inactive) 2px, transparent 2px);
     background-size: 6px 6px;
     background-color: #080810;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     border: 2px solid #24273f;
 }
 
@@ -25,12 +25,12 @@
 .btn {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
     background: var(--bg-input);
     color: var(--text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;

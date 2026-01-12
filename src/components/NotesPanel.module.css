@@ -11,14 +11,14 @@
     gap: 8px;
     padding: 14px 20px;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: var(--bg-card);
     color: var(--accent);
     font-size: 0.95rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .addBtn:hover {
@@ -37,14 +37,14 @@
     min-height: 80px;
     padding: 12px;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 0.9rem;
     font-family: inherit;
     outline: none;
     resize: vertical;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .textarea:focus {
@@ -65,12 +65,12 @@
 .cancelBtn,
 .saveBtn {
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     font-size: 0.85rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .cancelBtn {
@@ -111,7 +111,7 @@
     padding-top: 10px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
 }
 
 .deleteBtn {
@@ -122,14 +122,14 @@
     height: 20px;
     padding: 0;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-muted);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .deleteBtn:hover {

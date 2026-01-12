@@ -4,9 +4,9 @@
     align-items: center;
     padding: 16px;
     background: var(--bg-input);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .item:hover {
@@ -41,12 +41,12 @@
 .btn {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
     background: var(--bg-input);
     color: var(--text-secondary);
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     justify-content: center;

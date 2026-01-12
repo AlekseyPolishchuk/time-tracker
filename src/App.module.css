@@ -48,7 +48,7 @@
 .currentTracker {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: var(--radius-xl);
     padding: 32px;
 }
 
@@ -64,13 +64,13 @@
     flex: 1;
     padding: 14px 16px;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 0.95rem;
     font-family: inherit;
     outline: none;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .input:focus {
@@ -85,14 +85,14 @@
 .btnSave {
     padding: 14px 24px;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     background: var(--bg-input);
     color: var(--text-primary);
     font-size: 0.95rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -111,7 +111,7 @@
 .savedTrackers {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
+    border-radius: var(--radius-xl);
     padding: 24px;
 }
 
