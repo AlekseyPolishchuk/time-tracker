@@ -35,8 +35,11 @@ export const LABELS = {
     ADD_NOTE: 'add note',
     NOTE_PLACEHOLDER: 'Enter note...',
     CLEAR_ALL: 'Clear all',
+    CLEAR_ALL_NOTES: 'Clear all',
     CONFIRM_CLEAR_TITLE: 'Clear all trackers?',
     CONFIRM_CLEAR_MESSAGE: 'Are you sure you want to clear all saved trackers? This action cannot be undone.',
+    CONFIRM_CLEAR_NOTES_TITLE: 'Clear all notes?',
+    CONFIRM_CLEAR_NOTES_MESSAGE: 'Are you sure you want to clear all notes? This action cannot be undone.',
     SAVE_BTN: 'Save',
     CANCEL_BTN: 'Cancel',
     CLOSE: 'Close'

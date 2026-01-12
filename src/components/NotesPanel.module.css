@@ -4,7 +4,14 @@
     gap: 12px;
 }
 
+.topActions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .addBtn {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,6 +33,29 @@
     background: var(--bg-secondary);
 }
 
+.clearBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 14px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.clearBtn:hover {
+    color: var(--text-primary);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger);
+}
+
 .noteForm {
     display: flex;
     flex-direction: column;
@@ -38,12 +68,13 @@
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    background: var(--bg-input);
+    background-color: var(--bg-input);
     color: var(--text-primary);
     font-size: 0.9rem;
     font-family: inherit;
     outline: none;
-    resize: vertical;
+    resize: none;
+    overflow: hidden;
     transition: var(--transition);
 }
 
@@ -54,6 +85,26 @@
 
 .textarea::placeholder {
     color: var(--text-muted);
+}
+
+/* Custom scrollbar */
+.textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.textarea::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: var(--radius-md);
+}
+
+.textarea::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--border-light);
 }
 
 .formActions {
@@ -103,6 +154,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    transition: gap 0.3s ease;
 }
 
 .noteCard {
@@ -114,7 +166,42 @@
     border: 1px solid var(--border-color);
     border-left: 4px solid var(--note-color);
     border-radius: var(--radius-lg);
-    transition: var(--transition);
+    transition:
+        all 0.3s ease,
+        opacity 0.2s ease,
+        transform 0.3s ease;
+    animation: slideIn 0.8s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        max-height: 200px;
+        margin-bottom: 12px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.noteCard.deleting {
+    animation: slideOut 0.3s ease forwards;
+    overflow: hidden;
 }
 
 .noteCard:hover {
@@ -129,7 +216,7 @@
     width: 20px;
     height: 20px;
     padding: 0;
-    border: none;
+    border: 1px solid transparent;
     border-radius: var(--radius-sm);
     background: transparent;
     color: var(--text-muted);
@@ -142,7 +229,8 @@
 
 .deleteBtn:hover {
     color: var(--text-primary);
-    background: var(--bg-secondary);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger);
 }
 
 .noteContent {
@@ -171,3 +259,20 @@
     overflow: hidden;
 }
 
+/* Custom scrollbar for edit textarea */
+.editTextarea::-webkit-scrollbar {
+    width: 6px;
+}
+
+.editTextarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editTextarea::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: var(--radius-sm);
+}
+
+.editTextarea::-webkit-scrollbar-thumb:hover {
+    background: var(--border-light);
+}

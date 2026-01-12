@@ -3,21 +3,22 @@ import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } fro
 import { ICON_SIZE, KEYBOARD_KEYS, LABELS } from '../constants';
 import { useStore } from '../store/useStore';
 import type { Note } from '../types';
-import { CloseIcon, PlusIcon } from './Icons';
+import { CloseIcon, DeleteIcon, PlusIcon } from './Icons';
+import { ConfirmDialog } from './ConfirmDialog';
 
 import styles from './NotesPanel.module.css';
 
 const NOTE_COLORS = [
-    '#4F46E5', // indigo
-    '#7C3AED', // violet
-    '#DB2777', // pink
-    '#DC2626', // red
-    '#EA580C', // orange
-    '#CA8A04', // yellow
-    '#16A34A', // green
-    '#0891B2', // cyan
-    '#0284C7', // blue
-    '#6366F1', // indigo-light
+    '#3B4A7A', // indigo
+    '#50377A', // violet
+    '#8B4A6F', // pink
+    '#9B4444', // red
+    '#B5613C', // orange
+    '#9B864A', // yellow
+    '#4A7A5E', // green
+    '#4A7A8B', // cyan
+    '#4A6A8B', // blue
+    '#5E4A7A', // purple
 ];
 
 function getColorForNote(id: number): string {
@@ -29,11 +30,15 @@ export function NotesPanel() {
     const addNote = useStore((state) => state.addNote);
     const updateNote = useStore((state) => state.updateNote);
     const deleteNote = useStore((state) => state.deleteNote);
+    const clearAllNotes = useStore((state) => state.clearAllNotes);
     const [isAdding, setIsAdding] = useState(false);
     const [newNote, setNewNote] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editContent, setEditContent] = useState('');
+    const [showClearDialog, setShowClearDialog] = useState(false);
+    const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
     const editTextareaRef = useRef<HTMLTextAreaElement>(null);
+    const newNoteTextareaRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
         if (editTextareaRef.current) {
@@ -41,6 +46,13 @@ export function NotesPanel() {
             editTextareaRef.current.style.height = `${editTextareaRef.current.scrollHeight}px`;
         }
     }, [editContent, editingId]);
+
+    useEffect(() => {
+        if (newNoteTextareaRef.current) {
+            newNoteTextareaRef.current.style.height = 'auto';
+            newNoteTextareaRef.current.style.height = `${newNoteTextareaRef.current.scrollHeight}px`;
+        }
+    }, [newNote]);
 
     const handleAdd = () => {
         if (newNote.trim()) {
@@ -101,16 +113,48 @@ export function NotesPanel() {
         setEditContent('');
     };
 
+    const handleDeleteNote = (id: number) => {
+        // Mark note as deleting
+        setDeletingIds(prev => new Set(prev).add(id));
+
+        // Wait for animation to complete, then actually delete
+        setTimeout(() => {
+            deleteNote(id);
+            setDeletingIds(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(id);
+                return newSet;
+            });
+        }, 300); // Match animation duration
+    };
+
+    const handleClearAll = () => {
+        clearAllNotes();
+        setShowClearDialog(false);
+    };
+
     return (
         <div className={styles.panel}>
-            {!isAdding ? (
-                <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
-                    <PlusIcon size={ICON_SIZE.MD} />
-                    {LABELS.ADD_NOTE}
-                </button>
-            ) : (
+            <div className={styles.topActions}>
+                {!isAdding ? (
+                    <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
+                        <PlusIcon size={ICON_SIZE.MD} />
+                        {LABELS.ADD_NOTE}
+                    </button>
+                ) : null}
+
+                {notes.length > 0 && !isAdding && (
+                    <button className={styles.clearBtn} onClick={() => setShowClearDialog(true)}>
+                        <DeleteIcon size={ICON_SIZE.SM} />
+                        {LABELS.CLEAR_ALL_NOTES}
+                    </button>
+                )}
+            </div>
+
+            {isAdding && (
                 <div className={styles.noteForm}>
                     <textarea
+                        ref={newNoteTextareaRef}
                         className={styles.textarea}
                         placeholder={LABELS.NOTE_PLACEHOLDER}
                         value={newNote}
@@ -133,10 +177,10 @@ export function NotesPanel() {
                 {notes.map(note => (
                     <div
                         key={note.id}
-                        className={styles.noteCard}
+                        className={`${styles.noteCard} ${deletingIds.has(note.id) ? styles.deleting : ''}`}
                         style={{ '--note-color': getColorForNote(note.id) } as React.CSSProperties}
                     >
-                        <button className={styles.deleteBtn} onClick={() => deleteNote(note.id)}>
+                        <button className={styles.deleteBtn} onClick={() => handleDeleteNote(note.id)}>
                             <CloseIcon size={ICON_SIZE.SM} />
                         </button>
                         {editingId === note.id ? (
@@ -157,6 +201,16 @@ export function NotesPanel() {
                     </div>
                 ))}
             </div>
+
+            <ConfirmDialog
+                isOpen={showClearDialog}
+                title={LABELS.CONFIRM_CLEAR_NOTES_TITLE}
+                message={LABELS.CONFIRM_CLEAR_NOTES_MESSAGE}
+                confirmLabel={LABELS.CLEAR_ALL}
+                cancelLabel={LABELS.CANCEL_BTN}
+                onConfirm={handleClearAll}
+                onCancel={() => setShowClearDialog(false)}
+            />
         </div>
     );
 }

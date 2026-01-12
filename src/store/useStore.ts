@@ -20,6 +20,7 @@ interface StoreState {
     addNote: (content: string) => void;
     updateNote: (id: number, content: string) => void;
     deleteNote: (id: number) => void;
+    clearAllNotes: () => void;
 
     // Timer actions
     setCurrentTime: (time: number) => void;
@@ -86,6 +87,8 @@ export const useStore = create<StoreState>()(
                 set((state) => ({
                     notes: state.notes.filter((note) => note.id !== id)
                 })),
+
+            clearAllNotes: () => set({ notes: [] }),
 
             // Timer actions
             setCurrentTime: (time) => set({ currentTime: time }),
