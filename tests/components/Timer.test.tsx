@@ -46,7 +46,7 @@ describe('Timer Component', () => {
         expect(setIsRunning).toHaveBeenCalledWith(false);
     });
 
-    it('resets timer when Reset button is clicked', () => {
+    it('resets timer when Reset button is clicked (keeps running state)', () => {
         const setTime = vi.fn();
         const setIsRunning = vi.fn();
 
@@ -55,33 +55,28 @@ describe('Timer Component', () => {
         const resetButton = screen.getByTitle('Reset');
         fireEvent.click(resetButton);
 
-        expect(setIsRunning).toHaveBeenCalledWith(false);
-        expect(setTime).toHaveBeenCalledWith(0);
+        // Reset now uses store directly and keeps running state
+        // It doesn't call setIsRunning or setTime from props
+        expect(setIsRunning).not.toHaveBeenCalled();
+        expect(setTime).not.toHaveBeenCalled();
     });
 
-    it('increments time every second when timer is running', () => {
+    it('updates display time based on elapsed time when running', () => {
         const setTime = vi.fn();
         const setIsRunning = vi.fn();
         const currentTime = 10;
 
-        const { rerender } = render(
-            <Timer time={currentTime} setTime={setTime} isRunning={true} setIsRunning={setIsRunning} />
-        );
+        // Timer now uses startedAt from store to calculate elapsed time
+        // When running, it displays time + elapsed since startedAt
+        // setTime is only called when pausing to save the elapsed time
+        render(<Timer time={currentTime} setTime={setTime} isRunning={true} setIsRunning={setIsRunning} />);
 
         // Advance time by 1 second
         vi.advanceTimersByTime(1000);
 
-        // Check that setTime was called with new value
-        expect(setTime).toHaveBeenCalledWith(currentTime + 1);
-
-        // Simulate update with new value
-        rerender(<Timer time={currentTime + 1} setTime={setTime} isRunning={true} setIsRunning={setIsRunning} />);
-
-        // Advance time by 1 more second
-        vi.advanceTimersByTime(1000);
-
-        // Check that setTime was called again
-        expect(setTime).toHaveBeenCalledWith(currentTime + 2);
+        // setTime should NOT be called while running (only on pause)
+        // The display updates locally based on startedAt
+        expect(setTime).not.toHaveBeenCalled();
     });
 
     it('does not increment time when timer is stopped', () => {

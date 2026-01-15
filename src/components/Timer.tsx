@@ -1,6 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { ICON_SIZE, INITIAL_TIME, LABELS, MILLISECONDS_IN_SECOND } from '../constants';
+import { useStore } from '../store/useStore';
 import type { TimerProps } from '../types';
 import { formatTime } from '../utils/formatTime';
 import { DotMatrix } from './DotMatrix';
@@ -9,15 +10,25 @@ import { PauseIcon, PlayIcon, ResetIcon } from './Icons';
 import styles from './Timer.module.css';
 
 export function Timer({ time, setTime, isRunning, setIsRunning }: TimerProps) {
+    const startedAt = useStore((state) => state.startedAt);
+    const [displayTime, setDisplayTime] = useState(time);
     const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     useEffect(() => {
-        if (isRunning) {
-            intervalRef.current = setInterval(() => {
-                setTime(time + 1);
-            }, MILLISECONDS_IN_SECOND);
-        } else if (intervalRef.current) {
-            clearInterval(intervalRef.current);
+        if (isRunning && startedAt) {
+            // Update display time based on real elapsed time
+            const updateDisplayTime = () => {
+                const elapsed = Math.floor((Date.now() - startedAt) / MILLISECONDS_IN_SECOND);
+                setDisplayTime(time + elapsed);
+            };
+
+            updateDisplayTime();
+            intervalRef.current = setInterval(updateDisplayTime, MILLISECONDS_IN_SECOND);
+        } else {
+            setDisplayTime(time);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
         }
 
         return () => {
@@ -25,21 +36,26 @@ export function Timer({ time, setTime, isRunning, setIsRunning }: TimerProps) {
                 clearInterval(intervalRef.current);
             }
         };
-    }, [isRunning, time, setTime]);
+    }, [isRunning, startedAt, time]);
 
     const handlePlayPause = () => {
+        if (isRunning && startedAt) {
+            // When pausing, save the actual elapsed time
+            const elapsed = Math.floor((Date.now() - startedAt) / MILLISECONDS_IN_SECOND);
+            setTime(time + elapsed);
+        }
         setIsRunning(!isRunning);
     };
 
     const handleReset = () => {
-        setIsRunning(false);
-        setTime(INITIAL_TIME);
+        // Reset time but keep running state
+        useStore.getState().resetTimer();
     };
 
     return (
         <div className={styles.timer}>
             <div className={styles.display}>
-                <DotMatrix value={formatTime(time)} />
+                <DotMatrix value={formatTime(displayTime)} />
             </div>
             <div className={styles.controls}>
                 <button className={`${styles.btn} ${styles.btnReset}`} onClick={handleReset} title={LABELS.RESET}>

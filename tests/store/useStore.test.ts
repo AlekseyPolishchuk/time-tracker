@@ -175,14 +175,17 @@ describe('Zustand Store', () => {
             expect(useStore.getState().isRunning).toBe(false);
         });
 
-        it('resets timer', () => {
-            useStore.setState({ currentTime: 100, isRunning: true });
+        it('resets timer (keeps running state)', () => {
+            useStore.setState({ currentTime: 100, isRunning: true, startedAt: Date.now() - 5000 });
 
             const { resetTimer } = useStore.getState();
             resetTimer();
 
             expect(useStore.getState().currentTime).toBe(0);
-            expect(useStore.getState().isRunning).toBe(false);
+            // Reset keeps the running state, only resets time
+            expect(useStore.getState().isRunning).toBe(true);
+            // startedAt should be reset to now when running
+            expect(useStore.getState().startedAt).not.toBeNull();
         });
     });
 

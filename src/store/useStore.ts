@@ -9,6 +9,7 @@ interface StoreState {
     notes: Note[];
     currentTime: number;
     isRunning: boolean;
+    startedAt: number | null;
 
     // Tracker actions
     addTracker: (name: string) => void;
@@ -44,6 +45,7 @@ export const useStore = create<StoreState>()(
             notes: [],
             currentTime: INITIAL_TIME,
             isRunning: false,
+            startedAt: null,
 
             // Tracker actions
             addTracker: (name) =>
@@ -180,15 +182,27 @@ export const useStore = create<StoreState>()(
 
             // Timer actions
             setCurrentTime: (time) => set({ currentTime: time }),
-            setIsRunning: (isRunning) => set({ isRunning }),
-            resetTimer: () => set({ currentTime: INITIAL_TIME, isRunning: false })
+            setIsRunning: (isRunning) =>
+                set((state) => ({
+                    isRunning,
+                    startedAt: isRunning ? Date.now() : null,
+                    currentTime: isRunning ? state.currentTime : state.currentTime
+                })),
+            resetTimer: () =>
+                set((state) => ({
+                    currentTime: INITIAL_TIME,
+                    // Keep running but reset startedAt to now
+                    startedAt: state.isRunning ? Date.now() : null
+                }))
         }),
         {
             name: STORAGE_KEY_NAME,
             partialize: (state) => ({
                 trackers: state.trackers,
                 notes: state.notes,
-                currentTime: state.currentTime
+                currentTime: state.currentTime,
+                startedAt: state.startedAt,
+                isRunning: state.isRunning
             }),
             merge: (persistedState, currentState) => {
                 const migratedState = persistedState as any;
