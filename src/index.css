@@ -23,7 +23,6 @@
     --accent-glow: rgba(94, 142, 192, 0.3);
     --danger: #ef4444;
     --danger-hover: #dc2626;
-    --success: #22c55e;
     --dot-color: #3daf41;
     --dot-inactive: #151520;
     --dot-glow: rgba(61, 175, 65, 0.6);
@@ -35,11 +34,7 @@
     --radius-xl: 16px;
 
     /* Spacing */
-    --spacing-xs: 8px;
-    --spacing-sm: 12px;
-    --spacing-md: 16px;
-    --spacing-lg: 24px;
-    --spacing-xl: 32px;
+    --spacing: 16px;
 
     /* Transitions */
     --transition: all 0.2s;

@@ -5,10 +5,40 @@ export interface Tracker {
     createdAt: string;
 }
 
-export interface Note {
+// Todo item for todo lists
+export interface TodoItem {
     id: number;
+    text: string;
+    completed: boolean;
+}
+
+// Text note type
+export interface TextNote {
+    id: number;
+    type: 'text';
     content: string;
     createdAt: string;
+}
+
+// Todo list note type
+export interface TodoListNote {
+    id: number;
+    type: 'todo';
+    title: string;
+    items: TodoItem[];
+    createdAt: string;
+}
+
+// Discriminated union for both note types
+export type Note = TextNote | TodoListNote;
+
+// Type guards
+export function isTextNote(note: Note): note is TextNote {
+    return note.type === 'text';
+}
+
+export function isTodoListNote(note: Note): note is TodoListNote {
+    return note.type === 'todo';
 }
 
 export interface TimerProps {

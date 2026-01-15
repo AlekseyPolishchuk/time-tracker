@@ -5,10 +5,9 @@
 .display {
     display: flex;
     justify-content: center;
-    margin-bottom: 24px;
+    margin-bottom: 14px;
     padding: 24px 20px;
-    background:
-        radial-gradient(circle at center, var(--dot-inactive) 2px, transparent 2px);
+    background: radial-gradient(circle at center, var(--dot-inactive) 2px, transparent 2px);
     background-size: 6px 6px;
     background-color: #080810;
     border-radius: var(--radius-md);

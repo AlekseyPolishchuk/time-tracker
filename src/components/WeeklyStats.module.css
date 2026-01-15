@@ -2,14 +2,14 @@
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-lg);
+    padding: var(--spacing);
 }
 
 .title {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing);
 }
 
 .daysList {
@@ -22,8 +22,8 @@
     display: grid;
     grid-template-columns: 100px 1fr 100px;
     align-items: center;
-    gap: var(--spacing-md);
-    padding: var(--spacing-md) 0;
+    gap: var(--spacing);
+    padding: var(--spacing) 0;
     border-bottom: 1px solid var(--border-color);
 }
 

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { INITIAL_TIME, STORAGE_KEY_NAME } from '../constants';
-import type { Note, Tracker } from '../types';
+import type { Note, TodoItem, Tracker } from '../types';
 
 interface StoreState {
     // State
@@ -21,6 +21,14 @@ interface StoreState {
     updateNote: (id: number, content: string) => void;
     deleteNote: (id: number) => void;
     clearAllNotes: () => void;
+
+    // Todo list actions
+    addTodoList: (title: string, items: TodoItem[]) => void;
+    updateTodoListTitle: (noteId: number, title: string) => void;
+    addTodoItem: (noteId: number, text: string) => void;
+    toggleTodoItem: (noteId: number, itemId: number) => void;
+    updateTodoItem: (noteId: number, itemId: number, text: string) => void;
+    deleteTodoItem: (noteId: number, itemId: number) => void;
 
     // Timer actions
     setCurrentTime: (time: number) => void;
@@ -71,6 +79,7 @@ export const useStore = create<StoreState>()(
                     notes: [
                         {
                             id: Date.now(),
+                            type: 'text',
                             content,
                             createdAt: new Date().toISOString()
                         },
@@ -90,6 +99,85 @@ export const useStore = create<StoreState>()(
 
             clearAllNotes: () => set({ notes: [] }),
 
+            // Todo list actions
+            addTodoList: (title, items) =>
+                set((state) => ({
+                    notes: [
+                        {
+                            id: Date.now(),
+                            type: 'todo',
+                            title,
+                            items,
+                            createdAt: new Date().toISOString()
+                        },
+                        ...state.notes
+                    ]
+                })),
+
+            updateTodoListTitle: (noteId, title) =>
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note.id === noteId && note.type === 'todo' ? { ...note, title } : note
+                    )
+                })),
+
+            addTodoItem: (noteId, text) =>
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note.id === noteId && note.type === 'todo'
+                            ? {
+                                  ...note,
+                                  items: [
+                                      ...note.items,
+                                      {
+                                          id: Date.now(),
+                                          text,
+                                          completed: false
+                                      }
+                                  ]
+                              }
+                            : note
+                    )
+                })),
+
+            toggleTodoItem: (noteId, itemId) =>
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note.id === noteId && note.type === 'todo'
+                            ? {
+                                  ...note,
+                                  items: note.items.map((item) =>
+                                      item.id === itemId ? { ...item, completed: !item.completed } : item
+                                  )
+                              }
+                            : note
+                    )
+                })),
+
+            updateTodoItem: (noteId, itemId, text) =>
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note.id === noteId && note.type === 'todo'
+                            ? {
+                                  ...note,
+                                  items: note.items.map((item) => (item.id === itemId ? { ...item, text } : item))
+                              }
+                            : note
+                    )
+                })),
+
+            deleteTodoItem: (noteId, itemId) =>
+                set((state) => ({
+                    notes: state.notes.map((note) =>
+                        note.id === noteId && note.type === 'todo'
+                            ? {
+                                  ...note,
+                                  items: note.items.filter((item) => item.id !== itemId)
+                              }
+                            : note
+                    )
+                })),
+
             // Timer actions
             setCurrentTime: (time) => set({ currentTime: time }),
             setIsRunning: (isRunning) => set({ isRunning }),
@@ -102,11 +190,25 @@ export const useStore = create<StoreState>()(
                 notes: state.notes,
                 currentTime: state.currentTime
             }),
-            merge: (persistedState, currentState) => ({
-                ...currentState,
-                ...(persistedState as Partial<StoreState>),
-                currentTime: (persistedState as any)?.currentTime ?? INITIAL_TIME
-            })
+            merge: (persistedState, currentState) => {
+                const migratedState = persistedState as any;
+
+                // Migrate old notes to add type field
+                if (migratedState?.notes) {
+                    migratedState.notes = migratedState.notes.map((note: any) => {
+                        if (!note.type) {
+                            return { ...note, type: 'text' };
+                        }
+                        return note;
+                    });
+                }
+
+                return {
+                    ...currentState,
+                    ...migratedState,
+                    currentTime: migratedState?.currentTime ?? INITIAL_TIME
+                };
+            }
         }
     )
 );

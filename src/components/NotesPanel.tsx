@@ -3,8 +3,11 @@ import { type ChangeEvent, type KeyboardEvent, useEffect, useRef, useState } fro
 import { ICON_SIZE, KEYBOARD_KEYS, LABELS } from '../constants';
 import { useStore } from '../store/useStore';
 import type { Note } from '../types';
-import { CloseIcon, DeleteIcon, PlusIcon } from './Icons';
+import { isTextNote, isTodoListNote } from '../types';
+import { CloseIcon, DeleteIcon, ListIcon, PlusIcon } from './Icons';
 import { ConfirmDialog } from './ConfirmDialog';
+import { TodoListCard } from './TodoListCard';
+import { TodoListForm } from './TodoListForm';
 
 import styles from './NotesPanel.module.css';
 
@@ -32,6 +35,7 @@ export function NotesPanel() {
     const deleteNote = useStore((state) => state.deleteNote);
     const clearAllNotes = useStore((state) => state.clearAllNotes);
     const [isAdding, setIsAdding] = useState(false);
+    const [isAddingTodoList, setIsAddingTodoList] = useState(false);
     const [newNote, setNewNote] = useState('');
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editContent, setEditContent] = useState('');
@@ -82,8 +86,10 @@ export function NotesPanel() {
     };
 
     const startEdit = (note: Note) => {
-        setEditingId(note.id);
-        setEditContent(note.content);
+        if (isTextNote(note)) {
+            setEditingId(note.id);
+            setEditContent(note.content);
+        }
     };
 
     const handleEditChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -136,17 +142,23 @@ export function NotesPanel() {
     return (
         <div className={styles.panel}>
             <div className={styles.topActions}>
-                {!isAdding ? (
-                    <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
-                        <PlusIcon size={ICON_SIZE.MD} />
-                        {LABELS.ADD_NOTE}
-                    </button>
+                {!isAdding && !isAddingTodoList ? (
+                    <>
+                        <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
+                            <PlusIcon size={ICON_SIZE.SM} />
+                            {LABELS.ADD_NOTE}
+                        </button>
+                        <button className={styles.addBtn} onClick={() => setIsAddingTodoList(true)}>
+                            <ListIcon size={ICON_SIZE.SM} />
+                            {LABELS.ADD_TODO_LIST}
+                        </button>
+                    </>
                 ) : null}
 
-                {notes.length > 0 && !isAdding && (
+                {notes.length > 0 && !isAdding && !isAddingTodoList && (
                     <button className={styles.clearBtn} onClick={() => setShowClearDialog(true)}>
-                        <DeleteIcon size={ICON_SIZE.SM} />
-                        {LABELS.CLEAR_ALL_NOTES}
+                        <DeleteIcon size={ICON_SIZE.XS} />
+                        {LABELS.CLEAR_ALL}
                     </button>
                 )}
             </div>
@@ -173,33 +185,48 @@ export function NotesPanel() {
                 </div>
             )}
 
+            {isAddingTodoList && <TodoListForm onCancel={() => setIsAddingTodoList(false)} />}
+
             <div className={styles.notesList}>
-                {notes.map(note => (
-                    <div
-                        key={note.id}
-                        className={`${styles.noteCard} ${deletingIds.has(note.id) ? styles.deleting : ''}`}
-                        style={{ '--note-color': getColorForNote(note.id) } as React.CSSProperties}
-                    >
-                        <button className={styles.deleteBtn} onClick={() => handleDeleteNote(note.id)}>
-                            <CloseIcon size={ICON_SIZE.SM} />
-                        </button>
-                        {editingId === note.id ? (
-                            <textarea
-                                ref={editTextareaRef}
-                                className={styles.editTextarea}
-                                value={editContent}
-                                onChange={handleEditChange}
-                                onKeyDown={handleEditKeyDown}
-                                onBlur={saveEdit}
-                                autoFocus
+                {notes.map((note) => {
+                    if (isTodoListNote(note)) {
+                        return (
+                            <TodoListCard
+                                key={note.id}
+                                note={note}
+                                color={getColorForNote(note.id)}
+                                isDeleting={deletingIds.has(note.id)}
+                                onDelete={() => handleDeleteNote(note.id)}
                             />
-                        ) : (
-                            <p className={styles.noteContent} onClick={() => startEdit(note)}>
-                                {note.content}
-                            </p>
-                        )}
-                    </div>
-                ))}
+                        );
+                    }
+
+                    return (
+                        <div
+                            key={note.id}
+                            className={`${styles.noteCard} ${deletingIds.has(note.id) ? styles.deleting : ''}`}
+                            style={{ '--note-color': getColorForNote(note.id) } as React.CSSProperties}>
+                            <button className={styles.deleteBtn} onClick={() => handleDeleteNote(note.id)}>
+                                <CloseIcon size={ICON_SIZE.SM} />
+                            </button>
+                            {editingId === note.id ? (
+                                <textarea
+                                    ref={editTextareaRef}
+                                    className={styles.editTextarea}
+                                    value={editContent}
+                                    onChange={handleEditChange}
+                                    onKeyDown={handleEditKeyDown}
+                                    onBlur={saveEdit}
+                                    autoFocus
+                                />
+                            ) : (
+                                <p className={styles.noteContent} onClick={() => startEdit(note)}>
+                                    {note.content}
+                                </p>
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             <ConfirmDialog

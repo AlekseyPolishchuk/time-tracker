@@ -7,21 +7,23 @@
 .topActions {
     display: flex;
     gap: 8px;
-    align-items: center;
+    align-items: stretch;
+    flex-wrap: wrap;
 }
 
 .addBtn {
     flex: 1;
+    min-width: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 14px 20px;
+    gap: 4px;
+    padding: 10px 6px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     background: var(--bg-card);
     color: var(--accent);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;
@@ -36,13 +38,13 @@
 .clearBtn {
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 14px 20px;
+    gap: 4px;
+    padding: 10px 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
     background: var(--bg-card);
     color: var(--text-secondary);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
     font-family: inherit;
     cursor: pointer;

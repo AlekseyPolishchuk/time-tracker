@@ -1,0 +1,227 @@
+.card {
+    position: relative;
+    padding: 14px;
+    padding-top: 10px;
+    padding-left: 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--note-color);
+    border-radius: var(--radius-lg);
+    transition:
+        all 0.3s ease,
+        opacity 0.2s ease,
+        transform 0.3s ease;
+    animation: slideIn 0.8s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        max-height: 500px;
+        margin-bottom: 12px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.card.deleting {
+    animation: slideOut 0.3s ease forwards;
+    overflow: hidden;
+}
+
+.card:hover {
+    border-color: var(--border-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.deleteBtn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.deleteBtn:hover {
+    color: var(--text-primary);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger);
+}
+
+.titleWrapper {
+    margin-bottom: 12px;
+}
+
+.title {
+    margin: 0;
+    padding-right: 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.title:hover {
+    color: var(--accent);
+}
+
+.titleInput {
+    width: 100%;
+    padding: 4px 8px;
+    padding-right: 24px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    transition: var(--transition);
+}
+
+.titleInput:focus {
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.itemsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.todoItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 24px;
+    min-height: 28px;
+}
+
+.checkbox {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.checkbox:hover {
+    color: var(--accent);
+}
+
+.itemText {
+    flex: 1;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-note);
+    cursor: pointer;
+    word-break: break-word;
+    transition: var(--transition);
+}
+
+.itemText:hover {
+    color: var(--text-primary);
+}
+
+.itemText.completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.itemInput {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: var(--transition);
+}
+
+.itemInput:focus {
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.deleteItemBtn {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.todoItem:hover .deleteItemBtn {
+    opacity: 1;
+}
+
+.deleteItemBtn:hover {
+    color: var(--danger);
+}
+
+.addItemBtn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    margin-top: 4px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.addItemBtn:hover {
+    color: var(--accent);
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
