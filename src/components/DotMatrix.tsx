@@ -237,11 +237,14 @@ const DIGIT_PATTERNS: Record<string, number[][]> = {
 
 interface DotMatrixProps {
     value: string;
+    color?: string;
 }
 
-export function DotMatrix({ value }: DotMatrixProps) {
+export function DotMatrix({ value, color }: DotMatrixProps) {
+    const style = color ? { '--dot-color': color, '--dot-glow': `${color}99` } as React.CSSProperties : undefined;
+
     return (
-        <div className={styles.display}>
+        <div className={styles.display} style={style}>
             {value.split('').map((char, charIndex) => {
                 const pattern = DIGIT_PATTERNS[char];
                 if (!pattern) return null;

@@ -18,8 +18,12 @@
 }
 
 .header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 16px 0;
+    max-width: 1328px;
+    margin: 0 auto;
 }
 
 .title {
@@ -29,7 +33,6 @@
     color: var(--text-primary);
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 10px;
 }
 
@@ -102,6 +105,28 @@
 .btnSave:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+.btnNew {
+    padding: 14px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btnNew:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(94, 142, 192, 0.1);
 }
 
 .savedTrackers {

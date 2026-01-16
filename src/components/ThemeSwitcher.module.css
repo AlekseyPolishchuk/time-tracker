@@ -1,0 +1,26 @@
+.select {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-family: inherit;
+    cursor: pointer;
+    transition: var(--transition);
+    outline: none;
+}
+
+.select:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+}
+
+.select:focus {
+    border-color: var(--accent);
+}
+
+.select option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}

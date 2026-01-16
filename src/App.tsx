@@ -1,8 +1,9 @@
-import { type ChangeEvent, type KeyboardEvent, useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useEffect, useState } from 'react';
 
-import { ClockIcon, DeleteIcon, SaveIcon } from './components/Icons';
+import { ClockIcon, DeleteIcon, PlusIcon, SaveIcon } from './components/Icons';
 import { ConfirmDialog } from './components/ConfirmDialog';
 import { NotesPanel } from './components/NotesPanel';
+import { ThemeSwitcher } from './components/ThemeSwitcher';
 import { Timer } from './components/Timer';
 import { TrackerList } from './components/TrackerList';
 import { WeeklyStats } from './components/WeeklyStats';
@@ -15,21 +16,29 @@ function App() {
     const trackers = useStore((state) => state.trackers);
     const currentTime = useStore((state) => state.currentTime);
     const isRunning = useStore((state) => state.isRunning);
+    const activeTrackerId = useStore((state) => state.activeTrackerId);
+    const activeTrackerName = useStore((state) => state.activeTrackerName);
+    const theme = useStore((state) => state.theme);
 
-    const addTracker = useStore((state) => state.addTracker);
+    const saveTracker = useStore((state) => state.saveTracker);
+    const setActiveTracker = useStore((state) => state.setActiveTracker);
+    const setActiveTrackerName = useStore((state) => state.setActiveTrackerName);
     const clearAllTrackers = useStore((state) => state.clearAllTrackers);
 
     const setCurrentTime = useStore((state) => state.setCurrentTime);
     const setIsRunning = useStore((state) => state.setIsRunning);
 
     // Local UI state
-    const [trackerName, setTrackerName] = useState('');
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+    // Apply theme to document
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
+
     const handleSaveTracker = () => {
-        if (!trackerName.trim()) return;
-        addTracker(trackerName.trim());
-        setTrackerName('');
+        if (!activeTrackerName.trim()) return;
+        saveTracker(activeTrackerName.trim());
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -39,7 +48,11 @@ function App() {
     };
 
     const handleNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setTrackerName(e.target.value);
+        setActiveTrackerName(e.target.value);
+    };
+
+    const handleNewTracker = () => {
+        setActiveTracker(null);
     };
 
     const handleClearAll = () => {
@@ -55,6 +68,8 @@ function App() {
         setShowConfirmDialog(false);
     };
 
+    const isEditing = activeTrackerId !== null;
+
     return (
         <div className={styles.app}>
             <header className={styles.header}>
@@ -62,6 +77,7 @@ function App() {
                     <ClockIcon size={ICON_SIZE.XL} />
                     {LABELS.APP_TITLE}
                 </h1>
+                <ThemeSwitcher />
             </header>
 
             <div className={styles.container}>
@@ -83,14 +99,23 @@ function App() {
                                 type='text'
                                 className={styles.input}
                                 placeholder={LABELS.INPUT_PLACEHOLDER}
-                                value={trackerName}
+                                value={activeTrackerName}
                                 onChange={handleNameChange}
                                 onKeyDown={handleKeyDown}
                             />
-                            <button className={styles.btnSave} onClick={handleSaveTracker} disabled={!trackerName.trim()}>
+                            <button
+                                className={styles.btnSave}
+                                onClick={handleSaveTracker}
+                                disabled={!activeTrackerName.trim()}>
                                 <SaveIcon size={ICON_SIZE.MD} />
-                                {LABELS.SAVE_BTN}
+                                {isEditing ? 'Update' : LABELS.SAVE_BTN}
                             </button>
+                            {isEditing && (
+                                <button className={styles.btnNew} onClick={handleNewTracker} title='New tracker'>
+                                    <PlusIcon size={ICON_SIZE.MD} />
+                                    New
+                                </button>
+                            )}
                         </div>
                     </section>
 

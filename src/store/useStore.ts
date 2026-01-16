@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { INITIAL_TIME, STORAGE_KEY_NAME } from '../constants';
+import { INITIAL_TIME, MILLISECONDS_IN_SECOND, STORAGE_KEY_NAME } from '../constants';
 import type { Note, TodoItem, Tracker } from '../types';
+
+export type Theme = 'darkest' | 'night';
 
 interface StoreState {
     // State
@@ -10,12 +12,23 @@ interface StoreState {
     currentTime: number;
     isRunning: boolean;
     startedAt: number | null;
+    activeTrackerId: number | null;
+    activeTrackerName: string;
+    theme: Theme;
+    dotColor: string;
+
+    // Theme actions
+    setTheme: (theme: Theme) => void;
+    setDotColor: (color: string) => void;
 
     // Tracker actions
     addTracker: (name: string) => void;
     updateTracker: (id: number, updates: Partial<Tracker>) => void;
     deleteTracker: (id: number) => void;
     clearAllTrackers: () => void;
+    setActiveTracker: (id: number | null) => void;
+    saveTracker: (name: string) => void;
+    setActiveTrackerName: (name: string) => void;
 
     // Note actions
     addNote: (content: string) => void;
@@ -46,22 +59,39 @@ export const useStore = create<StoreState>()(
             currentTime: INITIAL_TIME,
             isRunning: false,
             startedAt: null,
+            activeTrackerId: null,
+            activeTrackerName: '',
+            theme: 'darkest',
+            dotColor: '#0fffc3',
+
+            // Theme actions
+            setTheme: (theme) => set({ theme }),
+            setDotColor: (color) => set({ dotColor: color }),
 
             // Tracker actions
             addTracker: (name) =>
-                set((state) => ({
-                    trackers: [
-                        {
-                            id: Date.now(),
-                            name,
-                            time: state.currentTime,
-                            createdAt: new Date().toISOString()
-                        },
-                        ...state.trackers
-                    ],
-                    currentTime: INITIAL_TIME,
-                    isRunning: false
-                })),
+                set((state) => {
+                    // Calculate actual time including elapsed time if running
+                    const actualTime =
+                        state.isRunning && state.startedAt
+                            ? state.currentTime + Math.floor((Date.now() - state.startedAt) / MILLISECONDS_IN_SECOND)
+                            : state.currentTime;
+
+                    return {
+                        trackers: [
+                            {
+                                id: Date.now(),
+                                name,
+                                time: actualTime,
+                                createdAt: new Date().toISOString()
+                            },
+                            ...state.trackers
+                        ],
+                        currentTime: INITIAL_TIME,
+                        isRunning: false,
+                        startedAt: null
+                    };
+                }),
 
             updateTracker: (id, updates) =>
                 set((state) => ({
@@ -73,7 +103,92 @@ export const useStore = create<StoreState>()(
                     trackers: state.trackers.filter((tracker) => tracker.id !== id)
                 })),
 
-            clearAllTrackers: () => set({ trackers: [] }),
+            clearAllTrackers: () => set({ trackers: [], activeTrackerId: null, activeTrackerName: '' }),
+
+            setActiveTracker: (id) =>
+                set((state) => {
+                    // First, save current tracker time if there's an active one running
+                    let updatedTrackers = state.trackers;
+                    if (state.activeTrackerId !== null && state.isRunning && state.startedAt) {
+                        const elapsed = Math.floor((Date.now() - state.startedAt) / MILLISECONDS_IN_SECOND);
+                        const actualTime = state.currentTime + elapsed;
+                        updatedTrackers = state.trackers.map((t) =>
+                            t.id === state.activeTrackerId ? { ...t, time: actualTime } : t
+                        );
+                    } else if (state.activeTrackerId !== null) {
+                        // Save current time even if not running
+                        updatedTrackers = state.trackers.map((t) =>
+                            t.id === state.activeTrackerId ? { ...t, time: state.currentTime } : t
+                        );
+                    }
+
+                    // If selecting null (new tracker), reset everything
+                    if (id === null) {
+                        return {
+                            trackers: updatedTrackers,
+                            activeTrackerId: null,
+                            activeTrackerName: '',
+                            currentTime: INITIAL_TIME,
+                            isRunning: false,
+                            startedAt: null
+                        };
+                    }
+
+                    // Find the tracker to activate
+                    const tracker = updatedTrackers.find((t) => t.id === id);
+                    if (!tracker) return state;
+
+                    return {
+                        trackers: updatedTrackers,
+                        activeTrackerId: id,
+                        activeTrackerName: tracker.name,
+                        currentTime: tracker.time,
+                        isRunning: false,
+                        startedAt: null
+                    };
+                }),
+
+            saveTracker: (name) =>
+                set((state) => {
+                    const actualTime =
+                        state.isRunning && state.startedAt
+                            ? state.currentTime + Math.floor((Date.now() - state.startedAt) / MILLISECONDS_IN_SECOND)
+                            : state.currentTime;
+
+                    // If editing existing tracker, update it
+                    if (state.activeTrackerId !== null) {
+                        return {
+                            trackers: state.trackers.map((t) =>
+                                t.id === state.activeTrackerId ? { ...t, name, time: actualTime } : t
+                            ),
+                            currentTime: INITIAL_TIME,
+                            isRunning: false,
+                            startedAt: null,
+                            activeTrackerId: null,
+                            activeTrackerName: ''
+                        };
+                    }
+
+                    // Creating new tracker
+                    return {
+                        trackers: [
+                            {
+                                id: Date.now(),
+                                name,
+                                time: actualTime,
+                                createdAt: new Date().toISOString()
+                            },
+                            ...state.trackers
+                        ],
+                        currentTime: INITIAL_TIME,
+                        isRunning: false,
+                        startedAt: null,
+                        activeTrackerId: null,
+                        activeTrackerName: ''
+                    };
+                }),
+
+            setActiveTrackerName: (name) => set({ activeTrackerName: name }),
 
             // Note actions
             addNote: (content) =>
@@ -202,7 +317,11 @@ export const useStore = create<StoreState>()(
                 notes: state.notes,
                 currentTime: state.currentTime,
                 startedAt: state.startedAt,
-                isRunning: state.isRunning
+                isRunning: state.isRunning,
+                activeTrackerId: state.activeTrackerId,
+                activeTrackerName: state.activeTrackerName,
+                theme: state.theme,
+                dotColor: state.dotColor
             }),
             merge: (persistedState, currentState) => {
                 const migratedState = persistedState as any;

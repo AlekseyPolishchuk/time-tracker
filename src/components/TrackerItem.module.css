@@ -6,11 +6,57 @@
     background: var(--bg-input);
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
-    transition: var(--transition);
+    transition:
+        all 0.3s ease,
+        opacity 0.2s ease,
+        transform 0.3s ease;
+    cursor: pointer;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        max-height: 100px;
+        margin-bottom: 12px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+        margin-bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.item.deleting {
+    animation: slideOut 0.3s ease forwards;
+    overflow: hidden;
 }
 
 .item:hover {
     border-color: var(--border-light);
+    background: var(--bg-secondary);
+}
+
+.item.active {
+    border-color: var(--accent);
+    background: rgba(94, 142, 192, 0.1);
+}
+
+.item.active:hover {
+    background: rgba(94, 142, 192, 0.15);
 }
 
 .info {
@@ -19,64 +65,15 @@
     gap: 16px;
 }
 
-.nameWrapper {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
 .name {
     font-weight: 500;
     font-size: 0.95rem;
     color: var(--text-primary);
-    cursor: pointer;
     transition: var(--transition);
 }
 
-.name:hover {
+.item.active .name {
     color: var(--accent);
-}
-
-.editBtn {
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.5;
-    transition: var(--transition);
-}
-
-.nameWrapper:hover .editBtn,
-.editBtn:focus {
-    opacity: 1;
-}
-
-.editBtn:hover {
-    color: var(--accent);
-}
-
-.nameInput {
-    font-weight: 500;
-    font-size: 0.95rem;
-    color: var(--text-primary);
-    background: var(--bg-input);
-    border: 1px solid var(--accent);
-    border-radius: var(--radius-sm);
-    padding: 4px 8px;
-    outline: none;
-    font-family: inherit;
-    min-width: 200px;
-    transition: var(--transition);
-}
-
-.nameInput:focus {
-    box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
 .time {
@@ -112,38 +109,12 @@
     color: var(--text-primary);
 }
 
-.btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.btnPlay {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg-primary);
-}
-
-.btnPlay:hover:not(:disabled) {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
-    color: var(--bg-primary);
-}
-
-.btnPlay.active {
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.btnReset {
-    background: var(--bg-input);
-}
-
 .btnDelete {
     color: var(--danger);
     border-color: var(--border-color);
 }
 
-.btnDelete:hover:not(:disabled) {
+.btnDelete:hover {
     background: rgba(239, 68, 68, 0.1);
     border-color: var(--danger);
 }
